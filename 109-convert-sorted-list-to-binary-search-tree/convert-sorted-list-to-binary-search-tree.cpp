@@ -21,26 +21,50 @@
  */
 class Solution {
 public:
-     TreeNode * sorted(vector <int> &a,int start,int end)
-     {
-        if (start>end)return NULL;
-        int mid=(start+end)/2;
-        TreeNode * root=new TreeNode(a[mid]);
-        root->left=sorted(a,start,mid-1);
-        root->right=sorted(a,mid+1,end);
-        return root;
-     }
-    TreeNode* sortedListToBST(ListNode* head) {
-        if (!head)return NULL;
-        vector<int> a;
-
-        while (head!=NULL)
-        {
-            a.push_back(head->val);
-            head=head->next;
+    //  TreeNode * sorted(vector <int> &a,int start,int end)
+    //  {
+    //     if (start>end)return NULL;
+    //     int mid=(start+end)/2;
+    //     TreeNode * root=new TreeNode(a[mid]);
+    //     root->left=sorted(a,start,mid-1);
+    //     root->right=sorted(a,mid+1,end);
+    //     return root;
+    //  }
+    ListNode * middle (ListNode* head,ListNode* &prev)
+    {   
+        ListNode* slow=head;
+        ListNode* fast=head;
+        while (fast && fast->next)
+        {   prev=slow;
+            slow=slow->next;
+            fast=fast->next->next;
         }
-      
-      return sorted(a,0,a.size()-1);
+        
+        return slow;
+    }
+    TreeNode* sortedListToBST(ListNode* head) {
+    //     if (!head)return NULL;
+    //     vector<int> a;
 
+    //     while (head!=NULL)
+    //     {
+    //         a.push_back(head->val);
+    //         head=head->next;
+    //     }
+      
+    //   return sorted(a,0,a.size()-1);
+
+      if (!head)return NULL;
+      if (head->next==NULL)return new TreeNode(head->val);
+       ListNode* prev=NULL;
+      ListNode* temp= middle(head,prev);
+       TreeNode* root=new  TreeNode(temp->val);
+       prev->next=NULL;
+       
+
+       root->left=sortedListToBST(head);
+       root->right=sortedListToBST(temp->next);
+
+      return root ;
     }
 };
